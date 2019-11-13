@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import leader
-
+import pygame
 # Global variables
 
 # function declarations
