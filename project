@@ -1,0 +1,14 @@
+#!/usr/bin/python
+
+import leader
+
+# Global variables
+
+# function declarations
+
+
+if __name__ == "__main__":
+    # call initialization functions
+    leader.get_leader_input()
+
+
