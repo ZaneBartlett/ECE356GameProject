@@ -36,6 +36,10 @@ class Player():
             self.y += self.vel
         self.rect = (self.x, self.y, self.width, self.height)
 
+def read_pos(str):
+    pos_tuple = str.split(",")
+    return int(str[0]), int(str[1])
+
 
 def update_display(player, window):
     window.fill((0, 0, 0))
