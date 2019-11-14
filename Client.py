@@ -1,4 +1,5 @@
 import pygame
+from network import Network
 
 # Global Variables
 pixel_width = 500
@@ -44,6 +45,8 @@ def update_display(player, window):
 
 def main():
     run = True
+    net = Network()
+    startPos = net.get_pos()
     player = Player(50, 50, 100, 100, (255, 255, 255))
     while run:
         for event in pygame.event.get():
