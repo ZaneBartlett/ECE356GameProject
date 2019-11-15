@@ -1,3 +1,6 @@
+import pygame
+
+
 class Player:
     def __init__(self, x, y, width, height, colour):
         self.x = x
@@ -7,6 +10,7 @@ class Player:
         self.colour = colour
         self.rect = (x, y, width, height)
         self.vel = 1
+        self.leader = False
 
     def draw_player(self, wind):
         pygame.draw.rect(wind, self.colour, self.rect)
