@@ -14,26 +14,26 @@ except socket.error as err:
 
 sock.listen(4)
 print("Waiting for connection")
-pos = [(0, 0), (100, 100), (50, 50), (200, 200)]
+play_nums = [1, 2, 3, 4, 5, 6, 7, 8]
 current_players = 0
 
 
 def threaded_client(conn, player):
-    conn.send(str.encode(make_pos(pos[player])))
+    conn.send(str.encode(make_pos(play_nums[player])))
     reply = ""
     while True:
         try:
             data = read_pos(conn.recv(2048).decode())
-            pos[player] = data
+            play_nums[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
                 if player > 0:
-                    reply = pos[0]
+                    reply = play_nums[0]
                 if player == 0:
-                    reply = pos[1]
+                    reply = play_nums[1]
                 print("Received: ", data)
                 print("Sending: ", reply)
 
@@ -45,13 +45,12 @@ def threaded_client(conn, player):
     conn.close()
 
 
-def read_pos(pos_str):
-    pos_str = pos_str.split(",")
-    return int(pos_str[0]), int(pos_str[1])
+def read_pos(play_num_str):
+    return int(play_num_str)
 
 
-def make_pos(pos_tuple):
-    return str(pos_tuple[0]) + "," + str(pos_tuple[1])
+def make_pos(play_num):
+    return str(play_num)
 
 
 while True:

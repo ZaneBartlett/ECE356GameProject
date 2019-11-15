@@ -1,31 +1,37 @@
-import pygame
+import pygame as pg
 
 
 class Player:
-    def __init__(self, x, y, width, height, colour):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.colour = colour
-        self.rect = (x, y, width, height)
+    def __init__(self, play_number):
         self.vel = 1
-        self.leader = False
+        self.number = play_number
 
-    def draw_player(self, wind):
-        pygame.draw.rect(wind, self.colour, self.rect)
+    def enter_text(self, text, x_pos, y_pos, win):
+        font = pg.font.Font("freesansbold.ttf", 14)
+        input_box = pg.Rect(x_pos, y_pos, 140, 32)
+        active = True
+        done = False
 
-    def move_player(self):
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT] and self.x != 0:
-            self.x -= self.vel
-        if key[pygame.K_RIGHT] and self.x != 400:
-            self.x += self.vel
-        if key[pygame.K_UP] and self.y != 0:
-            self.y -= self.vel
-        if key[pygame.K_DOWN] and self.y != 400:
-            self.y += self.vel
-        self.update()
+        while not done:
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN:
+                    if active:
+                        if event.key == pg.K_RETURN:
+                            print(text)
+                            text = ''
+                            active = False
+                        elif event.key == pg.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
 
-    def update(self):
-        self.rect = (self.x, self.y, self.width, self.height)
+            # Render the current text.
+            txt_surface = font.render(text, True, (255, 255, 255))
+            # Resize the box if the text is too long.
+            width = max(200, txt_surface.get_width() + 10)
+            input_box.w = width
+            # Blit the text.
+            win.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+            # Blit the input_box rect.
+            pg.draw.rect(win, (255, 255, 255), input_box, 2)
+            return text
