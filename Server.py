@@ -1,8 +1,7 @@
 import socket
-import sys
 from _thread import *
 
-server = "10.0.0.151"
+server = "134.87.148.149"
 port = 5555
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,15 +12,13 @@ try:
 except socket.error as err:
     str(err)
 
-# TODO change 2 to number of players want to play
-sock.listen(2)
+sock.listen(4)
 print("Waiting for connection")
-pos = [(0, 0), (100, 100)]
+pos = [(0, 0), (100, 100), (50, 50), (200, 200)]
 current_players = 0
 
 
 def threaded_client(conn, player):
-    print(player)
     conn.send(str.encode(make_pos(pos[player])))
     reply = ""
     while True:
@@ -33,7 +30,7 @@ def threaded_client(conn, player):
                 print("Disconnected")
                 break
             else:
-                if player == 1:
+                if player > 0:
                     reply = pos[0]
                 if player == 0:
                     reply = pos[1]
