@@ -2,7 +2,7 @@ import socket
 import sys
 from _thread import *
 
-server = "192.168.0.110"
+server = "10.0.0.151"
 port = 5555
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,6 +21,7 @@ current_players = 0
 
 
 def threaded_client(conn, player):
+    print(player)
     conn.send(str.encode(make_pos(pos[player])))
     reply = ""
     while True:
@@ -48,8 +49,8 @@ def threaded_client(conn, player):
 
 
 def read_pos(pos_str):
-    pos_tuple = pos_str.split(",")
-    return pos_tuple(str[0]), pos_tuple(str[1])
+    pos_str = pos_str.split(",")
+    return int(pos_str[0]), int(pos_str[1])
 
 
 def make_pos(pos_tuple):
