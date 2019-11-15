@@ -16,24 +16,30 @@ except socket.error as err:
 # TODO change 2 to number of players want to play
 sock.listen(2)
 print("Waiting for connection")
+pos = [(0, 0), (100, 100)]
+current_players = 0
 
 
-def threaded_client(conn):
-    conn.send(str.encode("Connected"))
+def threaded_client(conn, player):
+    conn.send(str.encode(make_pos(pos[player])))
     reply = ""
     while True:
         try:
-            data = conn.recv(2048)
-            reply = data.decode("utf-8")
+            data = read_pos(conn.recv(2048).decode())
+            pos[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                print("Received: ", reply)
+                if player == 1:
+                    reply = pos[0]
+                if player == 0:
+                    reply = pos[1]
+                print("Received: ", data)
                 print("Sending: ", reply)
 
-            conn.sendall(str.encode(reply))
+            conn.sendall(str.encode(make_pos(reply)))
         except:
             break
 
@@ -41,8 +47,18 @@ def threaded_client(conn):
     conn.close()
 
 
+def read_pos(pos_str):
+    pos_tuple = pos_str.split(",")
+    return pos_tuple(str[0]), pos_tuple(str[1])
+
+
+def make_pos(pos_tuple):
+    return str(pos_tuple[0]) + "," + str(pos_tuple[1])
+
+
 while True:
     conn, addr = sock.accept()
     print("Connected to: ", addr)
 
-    start_new_thread(threaded_client, (conn,))
+    start_new_thread(threaded_client, (conn, current_players))
+    current_players += 1
