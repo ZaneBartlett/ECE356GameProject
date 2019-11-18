@@ -1,11 +1,8 @@
 import pygame
 
-# define the RGB value for white,
-#  green, blue colour .
+# define the RGB value for white and black
 white = (255, 255, 255)
 black = (0, 0, 0)
-green = (0, 255, 0)
-blue = (0, 0, 128)
 
 
 def display_text(text, window, x, y):

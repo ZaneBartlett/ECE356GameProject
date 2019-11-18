@@ -1,6 +1,5 @@
 import pygame
 from network import Network
-from player import Player
 import display_text
 
 pygame.init()
@@ -15,37 +14,35 @@ window = pygame.display.set_mode((pixel_width, pixel_height))
 pygame.display.set_caption("Client")
 
 
-def read_pos(play_num_str):
-    return int(play_num_str)
-
-
-def make_pos(play_num):
-    return str(play_num)
-
-
-def update_display(text, play1, play2, wind):
+def update_display(text, player1, wind):
     window.fill((0, 0, 0))
-    if play1.number == 1:
+    if player1.leader and player1.is_typing:
         display_text.display_text("Enter a question:", wind, 350, 300)
-        entered_text = play1.enter_text(text, 150, 200, wind)
+        player1.enter_text(text, 100, 200, wind)
+    elif player1.leader and not player1.is_typing:
+        display_text.display_text("Waiting on player responses", wind, pixel_width, pixel_height)
+    elif not player1.leader and player1.is_typing:
+        display_text.display_text("Respond to the following: " + text, wind, pixel_width, pixel_height)
+        player1.enter_text(text, 100, 200, wind)
     else:
-        display_text.display_text("Waiting on group leader input", wind, pixel_width, pixel_height)
-        entered_text = ''
+        display_text.display_text("Waiting on other players", wind, pixel_width, pixel_height)
+
     pygame.display.update()
-    return entered_text
+    return player1.last_entered_text
 
 
 def main():
-    entered_text = ''
+    clock = pygame.time.Clock()
     net = Network()
-    start_pos = read_pos(net.get_pos())
-    play1 = Player(start_pos)
-    play2 = Player(start_pos)
+    player1 = net.get_player()
+    entered_text = ''
     while True:
+        clock.tick(60)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        entered_text = update_display(entered_text, play1, play2, window)
+        entered_text = update_display(entered_text, player1, window)
 
 
 main()
