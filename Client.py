@@ -29,8 +29,8 @@ def game_state0(player):
 def game_state1(player):
     global entered_text
     if player.leader and player.is_typing:
-        display_text.display_text("Enter a question:", window, 350, 300)
-        entered_text = player.enter_text(entered_text, 100, 200, window)
+        display_text.display_text("Enter a question:", window, 150, 200)
+        entered_text = player.enter_text(entered_text, 500, 500, window)
     elif player.leader and not player.is_typing:
         database.insert_user_input(player.number, entered_text, player.game_number)
         database.next_game_state(player.game_number, player.game_state)
@@ -53,18 +53,23 @@ def game_state2(player):
     elif not player.leader and player.is_typing:
         question = database.get_question(player.game_number)
         display_text.display_text("Respond to the following: " + str(question),
-                                  window, pixel_width, pixel_height)
-        entered_text = player.enter_text(entered_text, 100, 200, window)
+                                  window, 500, 350)
+        entered_text = player.enter_text(entered_text, 150, 250, window)
     elif not player.leader and not player.is_typing:
         database.insert_user_input(player.number, entered_text, player.game_number)
         database.player_ready(player.number, player.game_number)
         display_text.display_text("Waiting on other players", window, 500, 500)
 
 
-def game_state4(player):
+def game_state3(player):
     global entered_text
     if player.leader and player.is_typing:
-        entered_text = player.enter_text(entered_text, 100, 200, window)
+        display_text.display_text("Pick your favourite answer: [1], [2], or [3]", window, 500, 300)
+        responses = database.get_inputs(player.game_number)
+        display_text.display_text("1: " + responses[0], window, 500, 400)
+        display_text.display_text("2: " + responses[1], window, 500, 450)
+        display_text.display_text("3: " + responses[2], window, 500, 500)
+        entered_text = player.enter_text(entered_text, 150, 300, window)
     elif player.leader and not player.is_typing:
         if entered_text == 1:
             winner = 1
@@ -85,18 +90,13 @@ def game_state4(player):
         database.next_game_state(player.game_number, player.game_number)
 
 
-def game_state5(player):
-    display_text.display_text("The winner is:", window, 500, 500)
-    display_text.display_text(database.get_winner(player.game_number), window, 500, 600)
+def game_state4(player):
+    display_text.display_text("The winner is:", window, 500, 400)
+    display_text.display_text(database.get_winner(player.game_number), window, 500, 475)
     if player.leader:
         display_text.display_text("Press any key to end game", window, 500, 650)
-        temp = player.enter_text(entered_text, 0, 0, window)
-        if temp is not None:
-            pygame.quit()
+        temp = player.enter_text(entered_text, 500, 500, window)
 
-
-def game_state3(player):
-    display_text.display_text("not implemented yet", window, 500, 500)
 
 
 def update_display(player):
@@ -109,6 +109,8 @@ def update_display(player):
         game_state2(player)
     elif player.game_state == 3:
         game_state3(player)
+    elif player.game_state == 4:
+        game_state4(player)
     pygame.display.update()
 
 
