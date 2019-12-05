@@ -2,6 +2,7 @@ import socket
 from _thread import *
 from player import Player
 import pickle
+import database
 
 server = "10.0.0.151"
 port = 5555
@@ -38,6 +39,9 @@ def leader_change(current_leader_num):
 
 # a function to create a new player client and begin communications when called
 def threaded_client(conn, player):
+    if player == 0:
+        database.new_game()
+    players[player].game_number = database.get_game_number()
     # send the current player initialization to Client.py
     conn.send(pickle.dumps(players[player]))
     reply = ""

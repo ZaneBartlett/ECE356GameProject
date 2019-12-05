@@ -4,6 +4,23 @@ cnx = mysql.connector.connect(user='root', password='123456',
                               database='my_game')
 
 
+def get_game_number():
+    try:
+        cursor = cnx.cursor()
+        cursor.execute("""
+                select * from game_info
+            """)
+        game_data = cursor.fetchall()
+        current_game_number = game_data[0][0]
+        for game in game_data:
+            if current_game_number < game[0]:
+                current_game_number = game[0]
+
+        return current_game_number
+    finally:
+        cnx.close()
+
+
 def get_game_state(game_number):
     try:
         cursor = cnx.cursor()
@@ -21,7 +38,7 @@ def get_game_state(game_number):
         cnx.close()
 
 
-def get_player_states(game_number):
+def are_players_ready(game_number):
     try:
         cursor = cnx.cursor()
         cursor.execute("""
@@ -33,7 +50,33 @@ def get_player_states(game_number):
             if game_number == game[0]:
                 ready_states = (game[6] + game[7] + game[8] + game[9])
 
-        return ready_states
+        if ready_states == 4:
+            return True
+        else:
+            return False
+    finally:
+        cnx.close()
+
+
+def add_user_input(player_number, user_text, game_number):
+    try:
+        cursor = cnx.cursor()
+        if player_number == 1:
+            query = "UPDATE game_info SET question = %s WHERE game_id = %s"
+            vals = (user_text, game_number)
+            cursor.execute(query, vals)
+        elif player_number == 2:
+            query = "UPDATE game_info SET answer1 = %s WHERE game_id = %s"
+            vals = (user_text, game_number)
+            cursor.execute(query, vals)
+        elif player_number == 3:
+            query = "UPDATE game_info SET answer2 = %s WHERE game_id = %s"
+            vals = (user_text, game_number)
+            cursor.execute(query, vals)
+        elif player_number == 4:
+            query = "UPDATE game_info SET answer3 = %s WHERE game_id = %s"
+            vals = (user_text, game_number)
+            cursor.execute(query, vals)
     finally:
         cnx.close()
 
