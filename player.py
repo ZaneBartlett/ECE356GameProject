@@ -8,9 +8,10 @@ class Player:
         self.leader = is_leader
         self.is_typing = True
         self.last_entered_text = ''
+        self.game_state = 0
+        self.question = ''
 
     def enter_text(self, text, x_pos, y_pos, win):
-        pygame.init()
         font = pygame.font.Font("freesansbold.ttf", 14)
         input_box = pygame.Rect(x_pos, y_pos, 140, 32)
 

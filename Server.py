@@ -3,7 +3,7 @@ from _thread import *
 from player import Player
 import pickle
 
-server = "192.168.0.110"
+server = "10.0.0.151"
 port = 5555
 
 # initialize a socket to connect to through the internet
