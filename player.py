@@ -9,6 +9,7 @@ class Player:
         self.is_typing = True
         self.last_entered_text = ''
         self.game_number = -1
+        self.game_state = 0
 
     def enter_text(self, text, x_pos, y_pos, win):
         font = pygame.font.Font("freesansbold.ttf", 14)

@@ -4,7 +4,7 @@ from player import Player
 import pickle
 import database
 
-server = "10.0.0.151"
+server = "192.168.0.110"
 port = 5555
 
 # initialize a socket to connect to through the internet
