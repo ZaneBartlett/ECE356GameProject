@@ -1,6 +1,58 @@
 import mysql.connector
 
 
+def set_winner(game_number, winner):
+    cnx = mysql.connector.connect(user='root', password='123456',
+                                  host='127.0.0.1',
+                                  database='my_game')
+    try:
+        cursor = cnx.cursor()
+        query = "UPDATE game_info SET winner = %s WHERE game_id = %s"
+        vals = (winner, game_number)
+        cursor.execute(query, vals)
+        cnx.commit()
+    finally:
+        cnx.close()
+
+
+def get_winner(game_number):
+    cnx = mysql.connector.connect(user='root', password='123456',
+                                  host='127.0.0.1',
+                                  database='my_game')
+    try:
+        cursor = cnx.cursor()
+        cursor.execute("""
+                           select * from game_info
+                       """)
+        game_data = cursor.fetchall()
+        for game in game_data:
+            if game_number == game[0]:
+                winner = "Player" + str(game[10])
+
+        return winner
+    finally:
+        cnx.close()
+
+
+def get_inputs(game_number):
+    cnx = mysql.connector.connect(user='root', password='123456',
+                                  host='127.0.0.1',
+                                  database='my_game')
+    try:
+        cursor = cnx.cursor()
+        cursor.execute("""
+                        select * from game_info
+                    """)
+        game_data = cursor.fetchall()
+        for game in game_data:
+            if game_number == game[0]:
+                responses = (game[3], game[4], game[5])
+
+        return responses
+    finally:
+        cnx.close()
+
+
 def get_question(game_number):
     cnx = mysql.connector.connect(user='root', password='123456',
                                   host='127.0.0.1',
